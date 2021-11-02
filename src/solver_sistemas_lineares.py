@@ -1,12 +1,6 @@
 import os
 from utils.leitor_csv import csv_para_list
 from ortools.linear_solver import pywraplp
-import tkinter as tk
-from tkinter import filedialog
-
-# Limpa root do tkinter para não abrir nenhum dialog adicional
-root = tk.Tk()
-root.withdraw()
 
 def set_coefficient(constraint, variavel, coefficient):
     constraint.SetCoefficient(variavel, float(coefficient))
@@ -37,7 +31,6 @@ def printar_sistema(solver, variaveis):
         print(f'= {constraint.lb()}')
 
 def solve_sistema_linear(input: list):
-
     solver = pywraplp.Solver.CreateSolver('GLOP')
     variaveis = []
 
@@ -58,33 +51,3 @@ def solve_sistema_linear(input: list):
             print(f'x{i} = {x.solution_value()}')
     else:
         print('Não existe uma solução ótima para este sistema!')
-
-# O input deve ser no formato:
-# a11, a12, ..., a1n, b1
-# a21, a22, ..., a2n, b1
-# .
-# .
-# .
-# am1, am2, ..., amn, bm
-#
-# exemplo:
-# 2,1,3
-# 1,-3,-2
-
-print('Escolha um arquivo CSV para resolver o sistema linear:')
-
-arquivo_path = ''
-try:
-    arquivo_path = filedialog.askopenfilename()
-    print('ARQUIVO ESCOLHIDO:', os.path.basename(arquivo_path), '\n')
-except:
-    print('Ocorreu um erro ao escolher o arquivo! Tente novamente...')
-
-try:
-    arquivo_list = csv_para_list(arquivo_path)
-except UnicodeDecodeError:
-    print('O arquivo precisa ser um CSV! Tente novamente...')
-except FileNotFoundError:
-    print('Arquivo escolhido não encontrado! Tente novamente...')
-
-solve_sistema_linear(arquivo_list)
